@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+</head>
+<body>
+
+    <div>请输入账号：<input type="text"  id="username" /></div>
+				<br>
+	<div >请输入密码：<input type="password" id="password" /></div>
+				<br>
+    <button type="button" class="btn btn-default" onclick="checkForm()">提交</button>
+    &nbsp; &nbsp; <span style="font-size:12px;color:red" id="msg"></span>
+    <div id="v_container" style="width: 200px;height: 50px;"></div>
+        <input type="text" id="code_input" value="" placeholder="请输入验证码"/><button id="my_button">验证</button>
+        <script src="js/jquery-3.5.1.min.js"></script>
+        <script src="js/gVerify.js"></script>
+    <script>
+        var verifyCode = new GVerify("v_container");
+        document.getElementById("my_button").onclick = function(){
+            var res = verifyCode.validate(document.getElementById("code_input").value);
+            if(res){
+                alert("验证正确");
+            }else{
+                alert("验证码错误");
+            }
+        }     
+//绑定点击事件的函数
+function checkForm(){
+	//得到名称和密码
+	var username=$("#username").val();
+	var password=$("#password").val();
+	//判断用户名和密码是否为空
+	if(isEmpty(username)||isEmpty(password)){
+		$("#msg").html("名称或密码不能为空!");
+		return;
+	}
+	
+	//不为空时清除<span>中的提示信息msg
+	$("#msg").html("");
+	
+	//用ajax发送请求
+	$.ajax({
+		type:"GET",
+		url:"https://httpbin.org/get",
+		data:{
+			'username':username,
+			'password':password
+		},
+		success:function(data){
+			console.log(data);
+		}
+	});		
+}
+//再在外面定义一个判断输入字符串是否为空的函数
+	function isEmpty(str){
+	if(str==null||str.trim()==""){
+		return true;//为空或者为null则返回true
+	}
+	   return false;	
+}
+    </script>
+</body>
+</html>
